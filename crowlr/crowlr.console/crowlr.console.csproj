@@ -49,6 +49,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\crowlr.abot\crowlr.abot.csproj">
+      <Project>{DA0DA79A-F9D7-44EB-B233-657E7F9B1C7E}</Project>
+      <Name>crowlr.abot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\crowlr.contracts\crowlr.contracts.csproj">
+      <Project>{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}</Project>
+      <Name>crowlr.contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
