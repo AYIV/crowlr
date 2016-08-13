@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crowlr.abot", "crowlr.abot\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crowlr.contracts", "crowlr.contracts\crowlr.contracts.csproj", "{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crowlr.core", "crowlr.core\crowlr.core.csproj", "{527CB1AB-6A66-4EBA-8953-D80C749D4E49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{527CB1AB-6A66-4EBA-8953-D80C749D4E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{527CB1AB-6A66-4EBA-8953-D80C749D4E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{527CB1AB-6A66-4EBA-8953-D80C749D4E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{527CB1AB-6A66-4EBA-8953-D80C749D4E49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,10 @@
 ﻿using Abot.Crawler;
 using Abot.Poco;
 using crowlr.contracts;
-using System;
 using HtmlAgilityPack;
+using System;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace crowlr.abot
 {
@@ -18,41 +19,54 @@ namespace crowlr.abot
                 UserAgentString = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
                 DownloadableContentTypes = "text/html, text/plain",
                 IsRespectRobotsDotTextEnabled = false,
-                MaxCrawlDepth = 1
+                MaxCrawlDepth = 1,
+                IsSendingCookiesEnabled = true
             };
         }
 
-        public IPage GetPage(string url)
+        public IPage Get(string url)
         {
-            return GetPage(new Uri(url));
+            return Get(new Uri(url));
         }
-
-        public IPage GetPage(Uri uri)
-        {
-            var page = CrawlPage(uri);
-
-            return new Page(page);
-        }
-
-        private HtmlDocument CrawlPage(Uri uri)
+        
+        public IPage Get(Uri uri)
         {
             bool crawlDisallowed = false;
-            HtmlDocument document = null;
+            IPage page = null;
 
             using (var crawler = new PoliteWebCrawler(Config))
             {
-                crawler.PageCrawlCompleted += (sender, e) => document = e.CrawledPage.HtmlDocument;
+                crawler.PageCrawlCompleted += (sender, e) => page = new Page(e.CrawledPage.HtmlDocument);
                 crawler.PageCrawlDisallowed += (sender, e) => crawlDisallowed = true;
 
                 crawler.Crawl(uri);
 
-                while (document == null && !crawlDisallowed)
+                while (page == null && !crawlDisallowed)
                     Thread.Sleep(100);
 
                 //TODO:: stop it somehow.
             }
 
-            return document;
+            return page;
+        }
+
+        public IPage GetPageEx(string htmlContent)
+        {
+            var document = new HtmlDocument();
+
+            document.LoadHtml(htmlContent);
+
+            return new Page(document);
+        }
+
+        public IPage Post(string url, IDictionary<string, string> parameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPage Post(Uri uri, IDictionary<string, string> parameters = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

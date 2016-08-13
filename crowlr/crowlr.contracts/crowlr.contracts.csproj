@@ -47,8 +47,6 @@
     <Compile Include="Dtos\INode.cs" />
     <Compile Include="Dtos\IPage.cs" />
     <Compile Include="Services\IPageDownloader.cs" />
-    <Compile Include="Dtos\Node.cs" />
-    <Compile Include="Dtos\Page.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

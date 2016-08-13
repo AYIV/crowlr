@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace crowlr.contracts
 {
     public interface IPageDownloader
     {
-        IPage GetPage(string url);
+        IPage Get(string url);
 
-        IPage GetPage(Uri uri);
+        IPage Get(Uri uri);
+
+        IPage Post(string url, IDictionary<string, string> parameters = null);
+
+        IPage Post(Uri uri, IDictionary<string, string> parameters = null);
     }
 }
