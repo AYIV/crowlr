@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web.Helpers;
 
 namespace crowlr.core
 {
@@ -33,6 +34,11 @@ namespace crowlr.core
                                                                   prop.Name,
                                                                   (arrayTypes.Contains(prop.PropertyType) ? string.Join(", ", (IEnumerable<string>)prop.GetValue(instance, null))
                                                                                                           : prop.GetValue(instance, null)))));
+        }
+
+        public static dynamic DecodeJson(string json)
+        {
+            return Json.Decode(json);
         }
     }
 }

@@ -24,12 +24,12 @@ namespace crowlr.abot
             };
         }
 
-        public IPage Get(string url)
+        public IPage Get(string url, IDictionary<string, string> headers = null)
         {
             return Get(new Uri(url));
         }
         
-        public IPage Get(Uri uri)
+        public IPage Get(Uri uri, IDictionary<string, string> headers = null)
         {
             bool crawlDisallowed = false;
             IPage page = null;
@@ -59,12 +59,12 @@ namespace crowlr.abot
             return new Page(document);
         }
 
-        public IPage Post(string url, IDictionary<string, string> parameters = null)
+        public IPage Post(string url, IDictionary<string, string> parameters = null, IDictionary<string, string> headers = null)
         {
             throw new NotImplementedException();
         }
 
-        public IPage Post(Uri uri, IDictionary<string, string> parameters = null)
+        public IPage Post(Uri uri, IDictionary<string, string> parameters = null, IDictionary<string, string> headers = null)
         {
             throw new NotImplementedException();
         }
