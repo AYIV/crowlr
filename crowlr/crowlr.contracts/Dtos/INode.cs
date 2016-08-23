@@ -5,5 +5,6 @@
         string Href { get; }
         string Value { get; }
         string Content { get; }
+        string Text { get; }
     }
 }

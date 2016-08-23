@@ -1,4 +1,6 @@
-﻿using crowlr.contracts;
+﻿using System;
+using System.Collections.Generic;
+using crowlr.contracts;
 using HtmlAgilityPack;
 
 namespace crowlr.abot
@@ -6,7 +8,20 @@ namespace crowlr.abot
     public class Page : IPage
     {
         private HtmlDocument htmlDocument;
-        
+
+        public bool IsJson
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public Page(HtmlDocument document)
         {
             this.htmlDocument = document;
@@ -42,6 +57,11 @@ namespace crowlr.abot
             return new Node(
                 htmlDocument.DocumentNode.SelectSingleNode(xpath)
             );
+        }
+
+        public IEnumerable<INode> GetNodeListByXpath(string xpath)
+        {
+            throw new NotImplementedException();
         }
     }
 }

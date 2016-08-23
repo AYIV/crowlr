@@ -68,6 +68,10 @@
       <Project>{527cb1ab-6a66-4eba-8953-d80c749d4e49}</Project>
       <Name>crowlr.core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\crowlr.linkedin\crowlr.linkedin.csproj">
+      <Project>{152e9da0-8f6a-4aed-8a18-93d6a21b5dd9}</Project>
+      <Name>crowlr.linkedin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

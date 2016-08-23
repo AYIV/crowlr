@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{527CB1AB-6A66-4EBA-8953-D80C749D4E49}</ProjectGuid>
+    <ProjectGuid>{152E9DA0-8F6A-4AED-8A18-93D6A21B5DD9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>crowlr.core</RootNamespace>
-    <AssemblyName>crowlr.core</AssemblyName>
+    <RootNamespace>crowlr.linkedin</RootNamespace>
+    <AssemblyName>crowlr.linkedin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,16 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers">
-      <HintPath>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v2.0\Packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,24 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\ArrayExtensions.cs" />
-    <Compile Include="Extensions\DictionaryExtesions.cs" />
-    <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
-    <Compile Include="Extensions\UriExtensions.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="Page.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="PageDownloader.cs" />
+    <Compile Include="Pages.cs" />
+    <Compile Include="SessionParameters.cs" />
+    <Compile Include="SiteProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\crowlr.contracts\crowlr.contracts.csproj">
-      <Project>{DC0164F8-B090-480C-B9E7-F16DB9A3E8E9}</Project>
+      <Project>{dc0164f8-b090-480c-b9e7-f16db9a3e8e9}</Project>
       <Name>crowlr.contracts</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\crowlr.core\crowlr.core.csproj">
+      <Project>{527CB1AB-6A66-4EBA-8953-D80C749D4E49}</Project>
+      <Name>crowlr.core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

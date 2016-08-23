@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace crowlr.contracts
 {
-    public interface IPageDownloader
+    public interface IPageDownloader : IDisposable
     {
         IPage Get(string url, IDictionary<string, string> headers = null);
 

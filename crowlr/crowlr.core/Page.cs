@@ -1,5 +1,7 @@
 ﻿using crowlr.contracts;
 using HtmlAgilityPack;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace crowlr.core
 {
@@ -7,13 +9,21 @@ namespace crowlr.core
     {
         private string _html;
         private HtmlDocument _htmlDocument;
-
+        
         private HtmlDocument HtmlDocument
         {
             get
             {
                 return _htmlDocument ?? (_htmlDocument = Page.FromHtml(_html));
             }
+        }
+
+        public bool IsJson { get; set; }
+
+        public Page(string html, bool isJson)
+            : this(html)
+        {
+            IsJson = isJson;
         }
 
         public Page(string html)
@@ -35,7 +45,9 @@ namespace crowlr.core
 
         public override string ToString()
         {
-            return HtmlDocument.DocumentNode.OuterHtml;
+            return IsJson
+                ? _html
+                : HtmlDocument.DocumentNode.OuterHtml;
         }
 
         public INode GetNodeById(string id)
@@ -63,6 +75,15 @@ namespace crowlr.core
             return new Node(
                 HtmlDocument.DocumentNode.SelectSingleNode(xpath)
             );
+        }
+
+        public IEnumerable<INode> GetNodeListByXpath(string xpath)
+        {
+            var nodes = HtmlDocument.DocumentNode.SelectNodes(xpath);
+
+            return nodes != null
+                ? nodes.Select(x => new Node(x)).ToArray()
+                : Enumerable.Empty<INode>();
         }
 
         private static HtmlDocument FromHtml(string html)

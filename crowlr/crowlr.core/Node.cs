@@ -36,6 +36,14 @@ namespace crowlr.core
             }
         }
 
+        public string Text
+        {
+            get
+            {
+                return _node?.InnerText;
+            }
+        }
+
         public override string ToString()
         {
             return _node.OuterHtml;

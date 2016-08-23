@@ -1,4 +1,5 @@
-﻿using crowlr.contracts;
+﻿using System;
+using crowlr.contracts;
 using HtmlAgilityPack;
 
 namespace crowlr.abot
@@ -33,6 +34,14 @@ namespace crowlr.abot
             get
             {
                 return _node?.GetAttributeValue("content", null);
+            }
+        }
+
+        public string Text
+        {
+            get
+            {
+                throw new NotImplementedException();
             }
         }
 

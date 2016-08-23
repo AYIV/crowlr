@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace crowlr.core
 {
-    public class PageDownloader : IPageDownloader, IDisposable
+    public sealed class PageDownloader : IPageDownloader
     {
         private HttpClient client;
         //TODO: do it private
@@ -56,6 +56,7 @@ namespace crowlr.core
         public void Dispose()
         {
             client?.Dispose();
+            GC.SuppressFinalize(client);
         }
 
         private void AddHeaders(HttpContent content, IDictionary<string, string> headers = null)
