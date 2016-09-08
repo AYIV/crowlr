@@ -35,7 +35,7 @@ namespace crowlr.core
 
         public IPage Get(string url, IDictionary<string, string> headers = null, ResponseType type = ResponseType.Html)
         {
-            return Get(new Uri(Uri.EscapeUriString(url)), headers);
+            return Get(new Uri(Uri.EscapeUriString(url)), headers, type);
         }
 
         public IPage Post(Uri uri, IDictionary<string, string> parameters = null, IDictionary<string, string> headers = null)

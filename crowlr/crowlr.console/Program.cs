@@ -243,6 +243,7 @@ namespace crowlr.console
                                 .Union(bgMatches.Select(i => i.Key))
                                 .Union(descriptionMatches.Select(i => i.Key))
                                 .Union(skillzMatches.Select(i => i.Key))
+                                .Select(i => i.Trim().ToLower())
                                 .Distinct();
 
                             var exceptFound = _totalMatches.Intersect(except);
@@ -252,6 +253,7 @@ namespace crowlr.console
                                 : skillCategories[category])
                                 .Concat(new[] { category })
                                 .Concat(seniorityCategories[seniority])
+                                .Select(i => i.Trim().ToLower())
                                 .ToList();
 
                             totalPercentage = matched.Intersect(_totalMatches).Count() * 100 / matched.Count();
@@ -265,7 +267,7 @@ namespace crowlr.console
                             ConsoleEx.WriteLine(showMatches("description", descriptionMatches), color);
                             ConsoleEx.WriteLine(showMatches("projects", bgMatches), color);
                             ConsoleEx.WriteLine(showMatches("skillz", skillzMatches), color);
-                            ConsoleEx.WriteLine($@"total -> {totalPercentage}%", color);
+                            ConsoleEx.WriteLine($@"total -> {totalPercentage}% [{string.Join(",", _totalMatches)}]", color);
 
                             if (exceptFound.Any())
                             {
