@@ -52,6 +52,8 @@
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtesions.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtenions.cs" />
+    <Compile Include="Extensions\PageExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Page.cs" />

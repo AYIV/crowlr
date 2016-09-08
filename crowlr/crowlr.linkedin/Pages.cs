@@ -4,5 +4,6 @@
     {
         public const string GetLogin = "GetLogin";
         public const string PostLogin = "PostLogin";
+        public const string GetAccount = "GetAccount";
     }
 }

@@ -23,16 +23,17 @@ namespace crowlr.core
         {
         }
 
-        public IPage Get(Uri uri, IDictionary<string, string> headers = null)
+        public IPage Get(Uri uri, IDictionary<string, string> headers = null, ResponseType type = ResponseType.Html)
         {
             AddHeaders(null, headers);            
 
             return new Page(
-                Client.GetAsync(uri).Result.Content()
+                Client.GetAsync(uri).Result.Content(),
+                isJson: type == ResponseType.Json
             );
         }
 
-        public IPage Get(string url, IDictionary<string, string> headers = null)
+        public IPage Get(string url, IDictionary<string, string> headers = null, ResponseType type = ResponseType.Html)
         {
             return Get(new Uri(Uri.EscapeUriString(url)), headers);
         }
@@ -81,6 +82,16 @@ namespace crowlr.core
 
                 Client.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
+        }
+
+        public IPage Get(string url, string[,] headers, ResponseType type = ResponseType.Html)
+        {
+            return Get(url, headers?.ToDictionary(), type);
+        }
+
+        public IPage Get(Uri uri, string[,] headers, ResponseType type = ResponseType.Html)
+        {
+            return Get(uri, headers?.ToDictionary(), type);
         }
     }
 }

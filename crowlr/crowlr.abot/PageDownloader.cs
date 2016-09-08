@@ -24,12 +24,12 @@ namespace crowlr.abot
             };
         }
 
-        public IPage Get(string url, IDictionary<string, string> headers = null)
+        public IPage Get(string url, IDictionary<string, string> headers = null, ResponseType type = ResponseType.Html)
         {
-            return Get(new Uri(url));
+            return Get(new Uri(url), headers, type);
         }
         
-        public IPage Get(Uri uri, IDictionary<string, string> headers = null)
+        public IPage Get(Uri uri, IDictionary<string, string> headers = null, ResponseType type = ResponseType.Html)
         {
             bool crawlDisallowed = false;
             IPage page = null;
@@ -70,6 +70,16 @@ namespace crowlr.abot
         }
 
         public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPage Get(string url, string[,] headers, ResponseType type = ResponseType.Html)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPage Get(Uri uri, string[,] headers, ResponseType type = ResponseType.Html)
         {
             throw new NotImplementedException();
         }

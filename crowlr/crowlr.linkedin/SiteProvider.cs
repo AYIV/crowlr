@@ -30,6 +30,9 @@ namespace crowlr.linkedin
                 case Pages.PostLogin:
                     return this.Login((@params as string[,]).ToDictionary());
 
+                case Pages.GetAccount:
+                    return this.Account((@params as string[,]).ToDictionary());
+
                 default:
                     throw new ArgumentOutOfRangeException($@"Not recognized page name. Current page name = [{pageName}]");
             }
@@ -43,6 +46,15 @@ namespace crowlr.linkedin
             SessionParams.Add(SessionParameters.Alias, loginPage.GetNodeById(SessionParameters.Alias)?.Value);
 
             return loginPage;
+        }
+
+        private IPage Account(IDictionary<string, string> parameters)
+        {
+            var id = parameters.Key("id");
+            if (id.IsNull())
+                return null;
+
+            return Downloader.Get($@"https://www.linkedin.com/profile/view?id={id}&trk=hp-identity-name");
         }
 
         private IPage Login(IDictionary<string, string> parameters)

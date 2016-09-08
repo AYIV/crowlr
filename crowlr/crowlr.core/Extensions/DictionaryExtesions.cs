@@ -19,5 +19,12 @@ namespace crowlr.core
                 }
             }
         }
+
+        public static TValue Key<TKey, TValue>(this IDictionary<TKey, TValue> @this, TKey key)
+        {
+            return @this.ContainsKey(key)
+                ? @this[key]
+                : default(TValue);
+        }
     }
 }

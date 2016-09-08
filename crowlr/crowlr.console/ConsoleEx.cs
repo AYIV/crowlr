@@ -11,7 +11,7 @@ namespace crowlr.console
 
         public static void WarningLine(string text)
         {
-            WriteLine(text, ConsoleColor.Yellow);
+            WriteLine(text, ConsoleColor.DarkYellow);
         }
 
         public static void WriteLine(string text, ConsoleColor color)
