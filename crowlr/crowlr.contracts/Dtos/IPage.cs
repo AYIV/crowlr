@@ -4,7 +4,11 @@ namespace crowlr.contracts
 {
     public interface IPage
     {
-        bool IsJson { get; set; }
+        string Html { get; }
+
+        bool IsJson { get; }
+
+        dynamic Json { get; }
 
         INode GetNodeById(string id);
 
@@ -15,5 +19,12 @@ namespace crowlr.contracts
         INode GetNodeByXpath(string xpath);
 
         IEnumerable<INode> GetNodeListByXpath(string xpath);
+    }
+
+    public interface IPage<T> : IPage
+    {
+        IDictionary<string, IEnumerable<T>> Process(IDictionary<string, INodeMeta> dictionary = null);
+
+        //IDictionary<string, INodeMeta> Criteria();
     }
 }

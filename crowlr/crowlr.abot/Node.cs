@@ -49,5 +49,10 @@ namespace crowlr.abot
         {
             return _node.OuterHtml;
         }
+
+        public string Attribute(string attributeName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

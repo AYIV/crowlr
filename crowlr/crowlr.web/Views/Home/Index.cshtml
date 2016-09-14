@@ -1,0 +1,31 @@
+﻿<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="../Scripts/jquery.signalR-2.2.1.js"></script>
+<script src="../signalr/hubs"></script>
+
+<script>
+    $(function () {
+        var test = $.connection.testHub;
+
+        test.client.test = function () {
+            Test();
+        };
+
+        $.connection.hub.start();
+        Test();
+    });
+
+    function Test() {
+        $.ajax({
+            url: '../api/home/test',
+            type: 'GET',
+            datatype: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    $('#test').append(data);
+                }
+            }
+        });
+    }
+</script>
+
+<span id="test"></span>

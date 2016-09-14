@@ -11,7 +11,7 @@ namespace crowlr.core
         {
             _node = node;
         }
-
+        
         public string Value
         {
             get
@@ -47,6 +47,21 @@ namespace crowlr.core
         public override string ToString()
         {
             return _node.OuterHtml;
+        }
+
+        public string Attribute(string attributeName)
+        {
+            switch(attributeName)
+            {
+                case "text":
+                    return this.Text;
+
+                case null:
+                    return null;
+
+                default:
+                    return _node?.GetAttributeValue(attributeName, null);
+            }
         }
     }
 }

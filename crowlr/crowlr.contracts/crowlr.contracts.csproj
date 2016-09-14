@@ -44,12 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\IAttributeMeta.cs" />
     <Compile Include="Dtos\INode.cs" />
+    <Compile Include="Dtos\INodeMeta.cs" />
     <Compile Include="Dtos\IPage.cs" />
+    <Compile Include="Dtos\ISelector.cs" />
     <Compile Include="Enums\ResponseType.cs" />
     <Compile Include="Services\IPageDownloader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ISiteProvider.cs" />
+    <Compile Include="Services\ITextProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

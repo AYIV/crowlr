@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages.cs" />
+    <Compile Include="SearchPage.cs" />
     <Compile Include="SessionParameters.cs" />
     <Compile Include="SiteProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

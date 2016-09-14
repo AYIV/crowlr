@@ -33,9 +33,23 @@ namespace crowlr.linkedin
                 case Pages.GetAccount:
                     return this.Account((@params as string[,]).ToDictionary());
 
+                case Pages.GetSearchPage:
+                    return this.SearchPage((@params as string[,]).ToDictionary());
+
                 default:
                     throw new ArgumentOutOfRangeException($@"Not recognized page name. Current page name = [{pageName}]");
             }
+        }
+
+        private IPage SearchPage(IDictionary<string, string> dictionary)
+        {
+            var searchPage = Downloader.Get(
+                $@"https://www.linkedin.com/voyager/api/search/hits?q=people&keywords={dictionary.Key("category")} {dictionary.Key("seniority")} {dictionary.Key("keywords")}&origin=HISTORY&start={dictionary.Key("start")}&count=20",
+                dictionary,
+                ResponseType.Json
+            );
+
+            return new SearchPage(searchPage);
         }
 
         private IPage ToLoginPage()
@@ -54,7 +68,9 @@ namespace crowlr.linkedin
             if (id.IsNull())
                 return null;
 
-            return Downloader.Get($@"https://www.linkedin.com/profile/view?id={id}&trk=hp-identity-name");
+            return new AccountPage(
+                Downloader.Get($@"https://www.linkedin.com/profile/view?id={id}&trk=hp-identity-name")
+            );
         }
 
         private IPage Login(IDictionary<string, string> parameters)

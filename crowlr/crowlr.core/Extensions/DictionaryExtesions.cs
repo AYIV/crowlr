@@ -26,5 +26,10 @@ namespace crowlr.core
                 ? @this[key]
                 : default(TValue);
         }
+
+        public static IDictionary<TKey, TValue> Empty<TKey, TValue>()
+        {
+            return new Dictionary<TKey, TValue>();
+        }
     }
 }

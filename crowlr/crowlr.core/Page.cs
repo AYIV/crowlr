@@ -1,5 +1,6 @@
 ﻿using crowlr.contracts;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,46 +8,43 @@ namespace crowlr.core
 {
     public class Page : IPage
     {
-        private string _html;
         private HtmlDocument _htmlDocument;
-        
-        private HtmlDocument HtmlDocument
+        protected HtmlDocument HtmlDocument
         {
             get
             {
-                return _htmlDocument ?? (_htmlDocument = Page.FromHtml(_html));
+                return _htmlDocument ?? (_htmlDocument = Page.FromHtml(Html));
             }
         }
 
-        public bool IsJson { get; set; }
+        public string Html { get; private set; }
+        public bool IsJson { get; private set; }
 
-        public Page(string html, bool isJson)
-            : this(html)
+        public dynamic Json
         {
-            IsJson = isJson;
+            get
+            {
+                return IsJson
+                    ? JsonConvert.DeserializeObject<dynamic>(Html)
+                    : null;
+            }
         }
 
         public Page(string html)
+            : this(html, isJson: false)
         {
-            _html = html;
         }
 
-        public Page(HtmlDocument document)
+        public Page(string html, bool isJson)
         {
-            _htmlDocument = document;
-        }
-        
-        public static IPage Ctor(string html)
-        {
-            return new Page(
-                Page.FromHtml(html)
-            );
+            Html = html;
+            IsJson = isJson;
         }
 
         public override string ToString()
         {
             return IsJson
-                ? _html
+                ? Html
                 : HtmlDocument.DocumentNode.OuterHtml;
         }
 
@@ -92,6 +90,22 @@ namespace crowlr.core
             document.LoadHtml(html);
 
             return document;
+        }
+    }
+
+    public class Page<T> : Page, IPage<T>
+    {
+        public Page(string html) : base(html)
+        {
+        }
+
+        public Page(string html, bool isJson) : base(html, isJson)
+        {
+        }
+
+        public virtual IDictionary<string, IEnumerable<T>> Process(IDictionary<string, INodeMeta> dictionary)
+        {
+            return DictionaryExtesions.Empty<string, IEnumerable<T>>();
         }
     }
 }

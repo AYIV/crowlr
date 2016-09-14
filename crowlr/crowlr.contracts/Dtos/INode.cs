@@ -6,5 +6,7 @@
         string Value { get; }
         string Content { get; }
         string Text { get; }
+
+        string Attribute(string attributeName);
     }
 }

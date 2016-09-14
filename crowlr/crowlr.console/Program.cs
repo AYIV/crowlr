@@ -1,6 +1,6 @@
 ﻿using crowlr.contracts;
 using crowlr.core;
-using crowlr.core.Extensions;
+using crowlr.linkedin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-// https://wwww.linkedin.com/people/invites/scroll?pageNum=0&pagesize=50
+// https://www.linkedin.com/people/invites/scroll?pageNum=0&pagesize=50
 // https://www.linkedin.com/m/profile/ACoAABdVV-gBgEkUGQaDXcOrRbQrcJK-wXPJlsw/
 // https://www.linkedin.com/profile/view?id={id}&trk=hp-identity-name
 
@@ -72,23 +72,16 @@ namespace crowlr.console
                 var added = 0;
                 while (added < total)
                 {
-                    var searchPage = downloader.Get(
-                        $@"https://www.linkedin.com/voyager/api/search/hits?q=people&keywords={category} {seniority} {keywords}&origin=HISTORY&start={start}&count=20",
-                        new[,] { { "Csrf-Token", csrfToken } },
-                        ResponseType.Json
-                    );
+                    var searchPage = linkedin.ExecutePage(crowlr.linkedin.Pages.GetSearchPage, new[,]
+                    {
+                        { "Csrf-Token", csrfToken },
+                        { "category", category },
+                        { "seniority", seniority },
+                        { "keywords", keywords },
+                        { "start", start.ToString() }
+                    });
                     
-                    var t = JsonConvert.DeserializeObject<dynamic>(searchPage.ToString());
-                    var searchResult = (t.elements as IEnumerable<dynamic>)
-                        .Where(x => x.hitInfo["com.linkedin.voyager.search.SearchProfile"] != null)
-                        .Select(x => x.hitInfo["com.linkedin.voyager.search.SearchProfile"])
-                        .Where(x => x.distance.value == "DISTANCE_2" || x.distance.value == "DISTANCE_3")
-                        .Select(x =>
-                        {
-                            var id = (x["miniProfile"]["entityUrn"].ToString().Split(':') as string[]).Last();
-                            return new { x.miniProfile.firstName, x.miniProfile.lastName, id, x.miniProfile.trackingId };
-                        })
-                        .ToList();
+                    var searchResult = ((IPage<MiniProfile>) searchPage).Process().Values.First().ToList();
 
                     Console.WriteLine(Environment.NewLine + $@"[{start}] Profiles -> {searchResult.Count} of 20");
                     searchResult
@@ -96,44 +89,37 @@ namespace crowlr.console
                         {
                             Thread.Sleep(new Random().Next(1000, 5000));
 
-                            var account = linkedin.ExecutePage(crowlr.linkedin.Pages.GetAccount, new[,] { { "id", x.id } });
+                            var account = linkedin.ExecutePage(crowlr.linkedin.Pages.GetAccount, new[,] { { "id", x.Id } });
+
+                            var nodes = ((IPage<string>) account).Process(new Dictionary<string, INodeMeta>
+                            {
+                                { "country", new NodeMeta(new NameSelector("location"), new HrefAttrParam("countryCode")) },
+                                { "isAdded", new NodeMeta(new XpathSelector("//a[@data-action-name=\"add-to-network\"]"), new HrefAttr()) },
+                                { "industry", new NodeMeta(new NameSelector("industry"), new HrefAttrParam("f_I")) },
+                                { "currentJob", new NodeMeta(new XpathSelector(@"//*[starts-with(@id,'experience-')]//h4/a"), new TextAttr()) }
+                            });
 
                             // location
-                            var countryNode = account.GetNodeByName("location");
-                            var href = countryNode?.Href;
-                            if (!string.IsNullOrWhiteSpace(href))
+                            var country = nodes.Key("country")?.FirstOrDefault();
+                            if (!country.IsNull() && country != "ua")
                             {
-                                var country = new Uri("http://linkedin.com" + href).Parameters("countryCode");
-                                if (country != "ua")
-                                {
-                                    ConsoleEx.WarningLine($@"[Skipped] {x.id} '{x.firstName + " " + x.lastName}' -> country [{countryNode?.Text}]");
-                                    return;
-                                }
+                                ConsoleEx.WarningLine($@"[Skipped] {x.Id} '{x.FirstName + " " + x.LastName}' -> country [{country}]");
+                                return;
                             }
 
                             // no request
-                            var addButton = account.GetNodeByXpath("//a[@data-action-name=\"add-to-network\"]")?.Href;
-                            if (addButton == null)
+                            if (nodes.Key("isAdded").IsNull())
                             {
-                                ConsoleEx.WarningLine($@"[Skipped] {x.id} '{x.firstName + " " + x.lastName}' -> already added");
+                                ConsoleEx.WarningLine($@"[Skipped] {x.Id} '{x.FirstName + " " + x.LastName}' -> already added");
                                 return;
                             }
 
                             // candidate industry
-                            var industryNode = account.GetNodeByName("industry");
-                            var industry = industryNode?.Href;
-                            if (!string.IsNullOrWhiteSpace(industry))
+                            var industry = nodes.Key("industry")?.FirstOrDefault();
+                            if (!industry.IsNull() && (industry == "104" || industry == "137"))
                             {
-                                int industryCode;
-                                var parsed = Int32.TryParse(new Uri("http://linkedin.com" + industry).Parameters("f_I"), out industryCode);
-                                if (parsed)
-                                {
-                                    if (industryCode == 104 || industryCode == 137)
-                                    {
-                                        ConsoleEx.WriteLine($@"[Recruiter] {x.id} '{x.firstName + " " + x.lastName}' -> industry ({industryNode?.Text})[{industryCode}]", ConsoleColor.DarkRed);
-                                        return;
-                                    }
-                                }
+                                ConsoleEx.WriteLine($@"[Recruiter] {x.Id} '{x.FirstName + " " + x.LastName}' -> industry ({industry})", ConsoleColor.DarkRed);
+                                return;
                             }
 
                             // get top 10 skillz
@@ -156,13 +142,13 @@ namespace crowlr.console
 
                                 if (hit.Length > 2)
                                 {
-                                    ConsoleEx.WriteLine($@"[Recruiter] {x.id} '{x.firstName + " " + x.lastName}' -> skillz [{string.Join(",", hit)}]", ConsoleColor.DarkRed);
+                                    ConsoleEx.WriteLine($@"[Recruiter] {x.Id} '{x.FirstName + " " + x.LastName}' -> skillz [{string.Join(",", hit)}]", ConsoleColor.DarkRed);
                                     return;
                                 }
                             }
 
                             // current job title
-                            var currentJob = account.GetNodeByXpath(@"//*[starts-with(@id,'experience-')]//h4/a")?.Text;
+                            var currentJob = nodes.Key("currentJob")?.FirstOrDefault();
                             if (!string.IsNullOrWhiteSpace(currentJob))
                             {
                                 var hit = recruiterMarks
@@ -171,14 +157,14 @@ namespace crowlr.console
 
                                 if (hit.Any())
                                 {
-                                    ConsoleEx.WriteLine($@"[Recruiter] {x.id} '{x.firstName + " " + x.lastName}' -> current job [{currentJob}]", ConsoleColor.DarkRed);
+                                    ConsoleEx.WriteLine($@"[Recruiter] {x.Id} '{x.FirstName + " " + x.LastName}' -> current job [{currentJob}]", ConsoleColor.DarkRed);
                                     return;
                                 }
                             }
 
                             // profile title
-                            var title = account.GetNodeByClass("title")?.Text;
-                            if (!string.IsNullOrWhiteSpace(title))
+                            var title = account.GetNodeByClass("title").Text;
+                            if (!title.IsNull())
                             {
                                 var hit = recruiterMarks
                                     .SelectMany(xx => new[] { title }.Where(item => item.ToLower().Contains(xx)))
@@ -186,7 +172,7 @@ namespace crowlr.console
 
                                 if (hit.Any())
                                 {
-                                    ConsoleEx.WriteLine($@"[Recruiter] {x.id} '{x.firstName + " " + x.lastName}' -> profile title [{title}]", ConsoleColor.DarkRed);
+                                    ConsoleEx.WriteLine($@"[Recruiter] {x.Id} '{x.FirstName + " " + x.LastName}' -> profile title [{title}]", ConsoleColor.DarkRed);
                                     return;
                                 }
                             }
@@ -262,7 +248,7 @@ namespace crowlr.console
                                 ? Console.ForegroundColor
                                 : ConsoleColor.DarkCyan;
 
-                            ConsoleEx.WriteLine($@"{x.firstName} {x.lastName} -> {title}", color);
+                            ConsoleEx.WriteLine($@"{x.FirstName} {x.LastName} -> {title}", color);
                             ConsoleEx.WriteLine(showMatches("title", titleMatches), color);
                             ConsoleEx.WriteLine(showMatches("description", descriptionMatches), color);
                             ConsoleEx.WriteLine(showMatches("projects", bgMatches), color);
@@ -276,14 +262,14 @@ namespace crowlr.console
 
                             if (totalPercentage <= bottom || exceptFound.Any())
                             {
-                                ConsoleEx.WriteLine($@"[LowLevel :: https://www.linkedin.com/profile/view?id={x.id}&trk=hp-identity-name]{Environment.NewLine}", color);
+                                ConsoleEx.WriteLine($@"[LowLevel :: https://www.linkedin.com/profile/view?id={x.Id}&trk=hp-identity-name]{Environment.NewLine}", color);
                                 return;
                             }
 
                             // invite user
-                            var json = string.Format(@"{{""trackingId"":""{0}"",""invitations"":[],""invitee"":{{""com.linkedin.voyager.growth.invitation.InviteeProfile"":{{""profileId"":""{1}""}}}}}}", x.trackingId, x.id);
+                            var json = string.Format(@"{{""trackingId"":""{0}"",""invitations"":[],""invitee"":{{""com.linkedin.voyager.growth.invitation.InviteeProfile"":{{""profileId"":""{1}""}}}}}}", x.TrackingId, x.Id);
                             var result = downloader.Client.PostAsync($@"https://www.linkedin.com/voyager/api/growth/normInvitations", new StringContent(json, System.Text.Encoding.UTF8, "application/json")).Result;
-                            Console.WriteLine($@"[{result.StatusCode} :: https://www.linkedin.com/profile/view?id={x.id}&trk=hp-identity-name]{Environment.NewLine}");
+                            Console.WriteLine($@"[{result.StatusCode} :: https://www.linkedin.com/profile/view?id={x.Id}&trk=hp-identity-name]{Environment.NewLine}");
 
                             added += 1;
                         });

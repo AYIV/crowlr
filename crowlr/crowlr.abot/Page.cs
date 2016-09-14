@@ -22,6 +22,22 @@ namespace crowlr.abot
             }
         }
 
+        public string Html
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public dynamic Json
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public Page(HtmlDocument document)
         {
             this.htmlDocument = document;
@@ -60,6 +76,11 @@ namespace crowlr.abot
         }
 
         public IEnumerable<INode> GetNodeListByXpath(string xpath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDictionary<string, IEnumerable<T>> Process<T>(IDictionary<string, INodeMeta> dictionary = null)
         {
             throw new NotImplementedException();
         }

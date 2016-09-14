@@ -1,17 +1,23 @@
-﻿{
+{
   "dependencies": {
-    "NETStandard.Library": "1.5.0-rc2-24027",
-
-    "Microsoft.AspNetCore.Mvc": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "Microsoft.AspNetCore.Mvc": "1.0.1",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
     "Microsoft.Extensions.Logging": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
-    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0"
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
+    "Microsoft.AspNetCore.Owin": "1.0.0",
+    "Microsoft.AspNet.SignalR": "2.2.1",
+    "Microsoft.AspNet.SignalR.Owin": "1.2.2",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+    "Microsoft.AspNet.SignalR.Core": "2.2.1",
+    "Microsoft.Owin": "3.0.1"
   },
 
   "tools": {
@@ -19,12 +25,7 @@
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
-      ]
-    }
+    "net461": {}
   },
 
   "buildOptions": {
@@ -54,5 +55,6 @@
 
   "runtimes": {
     "win10-x64": {}
-  }
+  },
+  "userSecretsId": "aspnet-crowlr.web-20160913104024"
 }
