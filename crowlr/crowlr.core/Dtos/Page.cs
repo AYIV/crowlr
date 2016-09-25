@@ -9,26 +9,14 @@ namespace crowlr.core
     public class Page : IPage
     {
         private HtmlDocument _htmlDocument;
-        protected HtmlDocument HtmlDocument
-        {
-            get
-            {
-                return _htmlDocument ?? (_htmlDocument = Page.FromHtml(Html));
-            }
-        }
+        protected HtmlDocument HtmlDocument => _htmlDocument ?? (_htmlDocument = Page.FromHtml(Html));
 
-        public string Html { get; private set; }
-        public bool IsJson { get; private set; }
+        public string Html { get; }
+        public bool IsJson { get; }
 
-        public dynamic Json
-        {
-            get
-            {
-                return IsJson
-                    ? JsonConvert.DeserializeObject<dynamic>(Html)
-                    : null;
-            }
-        }
+        public dynamic Json => IsJson
+            ? JsonConvert.DeserializeObject<dynamic>(Html)
+            : null;
 
         public Page(string html)
             : this(html, isJson: false)
@@ -79,9 +67,7 @@ namespace crowlr.core
         {
             var nodes = HtmlDocument.DocumentNode.SelectNodes(xpath);
 
-            return nodes != null
-                ? nodes.Select(x => new Node(x)).ToArray()
-                : Enumerable.Empty<INode>();
+            return nodes?.Select(x => new Node(x)).ToArray() ?? Enumerable.Empty<INode>();
         }
 
         private static HtmlDocument FromHtml(string html)

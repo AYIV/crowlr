@@ -3,29 +3,35 @@
 <script src="../signalr/hubs"></script>
 
 <script>
-    $(function () {
-        var test = $.connection.testHub;
-
-        test.client.test = function () {
-            Test();
-        };
-
-        $.connection.hub.start();
-        Test();
+    $(() => {
+        initHub("testHub", (data) => {
+            $('#text').append(data.item.index + ' :: ' + data.item.guid + '<br/>');
+            if (data.isLast) {
+                $('#textLoader').text('Loaded');
+            }
+        })
     });
 
-    function Test() {
+    function initHub(hubName, func) {
+        var hub = $.connection[hubName];
+
+        hub.client.notify = (data) => func(data);
+
+        $.connection.hub.start();
+    }
+
+    function getrequest() {
         $.ajax({
-            url: '../api/home/test',
+            url: '../api/home/text',
             type: 'GET',
             datatype: 'json',
-            success: function (data) {
-                if (data.length > 0) {
-                    $('#test').append(data);
-                }
+            success: (data) => {
+                $('#textLoader').append('Loading...<br/>');
             }
         });
     }
 </script>
 
-<span id="test"></span>
+<span id="textLoader"></span><br/>
+<input type="button" onclick="getrequest()" value="Get GUIDs" /><br />
+<span id="text"></span>

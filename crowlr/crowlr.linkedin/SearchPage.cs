@@ -40,7 +40,7 @@ namespace crowlr.linkedin
             {
                 {
                     "main",
-                    (this.Json.elements as IEnumerable<dynamic>)
+                    ((this.Json?.elements ?? Enumerable.Empty<dynamic>()) as IEnumerable<dynamic>)
                         .Where(x => x.hitInfo["com.linkedin.voyager.search.SearchProfile"] != null)
                         .Select(x => x.hitInfo["com.linkedin.voyager.search.SearchProfile"])
                         .Where(x => x.distance.value == "DISTANCE_2" || x.distance.value == "DISTANCE_3")
@@ -57,6 +57,11 @@ namespace crowlr.linkedin
 
     public class AccountPage : Page<string>
     {
+        public AccountPage(string html)
+            : base(html, isJson: false)
+        {
+        }
+
         public AccountPage(IPage page)
             : base(page.Html, page.IsJson)
         {

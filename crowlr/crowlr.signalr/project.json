@@ -2,12 +2,21 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0"
+    "Microsoft.Owin": "3.0.1",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
+    "Microsoft.AspNet.SignalR": "2.2.1",
+    "Microsoft.AspNet.SignalR.Owin": "1.2.2",
+    "Microsoft.AspNet.SignalR.Core": "2.2.1",
+    "Microsoft.AspNetCore.Owin": "1.0.0"
   },
 
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "net461": {
+      "dependencies": {
+        "crowlr.contracts": {
+          "target": "project"
+        }
+      }
     }
   }
 }

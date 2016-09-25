@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace crowlr.core
 {
@@ -30,6 +31,14 @@ namespace crowlr.core
         public static IDictionary<TKey, TValue> Empty<TKey, TValue>()
         {
             return new Dictionary<TKey, TValue>();
+        }
+
+        public static string Print<T1, T2>(this IDictionary<T1, T2> @this)
+        {
+            if (@this.IsNull())
+                return string.Empty;
+
+            return $@"[{string.Join(",", @this.Select(e => e.Key + "->" + e.Value))}]";
         }
     }
 }
